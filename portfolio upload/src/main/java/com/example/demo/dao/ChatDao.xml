@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.dao.ChatDao">
+	<select id="getCount" resultType="Integer">
+		SELECT COUNT(*) AS cnt
+		FROM chatRoom
+	</select>
+
+	<select id="getList" resultMap="chatRoom">
+		SELECT CR.*,
+		M.name AS
+		extra__creatorName
+		FROM chatRoom AS CR
+		LEFT JOIN `member` AS M
+		ON
+		CR.memberId = M.id
+		ORDER BY CR.id DESC
+	</select>
+
+	<select id="getPagedList" parameterType="map" resultMap="chatRoom">
+		SELECT CR.*,
+		M.name AS
+		extra__creatorName
+		FROM chatRoom AS CR
+		LEFT JOIN `member` AS M
+		ON
+		CR.memberId = M.id
+		ORDER BY CR.id DESC
+		<if test="limitFrom != null and limitTake != null">
+		LIMIT #{limitFrom}, #{limitTake}
+		</if>
+	</select>
+
+	<select id="findById"
+		resultMap="chatRoom">
+		SELECT *
+		FROM chatRoom
+		WHERE id = #{id}
+	</select>
+
+	<insert id="add" parameterType="map" useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO `chatRoom`
+		SET regDate = NOW(),
+		title =
+		#{title},
+		passwd = #{passwd},
+		memberId = #{memberId}
+	</insert>
+
+	<insert id="addMessage" parameterType="map"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `chatMessage`
+		SET
+		regDate = NOW(),
+		`body` = #{body},
+		roomId = #{roomId},
+		memberId =
+		#{memberId}
+	</insert>
+
+	<select id="getMessages"
+		resultMap="chatMessage">
+		SELECT CM.*,
+		M.name AS
+		memberName
+		FROM chatMessage AS CM
+		JOIN `member` AS M
+		ON M.id = CM.memberId
+		AND CM.roomId = #{roomId}
+		AND CM.id >= #{from}
+		ORDER BY id ASC
+	</select>
+
+	<resultMap type="com.example.demo.dto.ChatRoom"
+		id="chatRoom">
+		<id property="id" column="id" />
+		<id property="regDate" column="regDate" />
+		<id property="title" column="title" />
+		<id property="passwd" column="passwd" />
+		<id property="memberId" column="memberId" />
+		<association property="extra" javaType="map">
+			<id property="creatorName" column="extra__creatorName" />
+		</association>
+	</resultMap>
+	
+	<resultMap type="com.example.demo.dto.ChatMessage"
+		id="chatMessage">
+		<id property="id" column="id" />
+		<id property="regDate" column="regDate" />
+		<id property="body" column="body" />
+		<id property="roomId" column="roomId" />
+		<id property="memberId" column="memberId" />
+		<association property="extra" javaType="map">
+			<id property="memberName" column="memberName" />
+		</association>
+	</resultMap>
+
+</mapper>

@@ -1,0 +1,105 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:if test="${title == null}">
+	<c:set var="title" value="${pageName}" />
+</c:if>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${title}</title>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link
+	href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap"
+	rel="stylesheet">
+<style>
+/* 폰트적용 */
+html {
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+a{
+    text-decoration:none;
+    color:black;
+}
+
+/* 노말라이즈 */
+body, ul, li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+/* 라이브러리 */
+.con {
+	margin-left: auto;
+	margin-right: auto;
+}
+/* 옆으로(좌측) 배열 */
+.cell {
+	float: left;
+	box-sizing: border-box;
+}
+/* 옆으로(우측) 배열 */
+.cell-right {
+	float: right;
+	box-sizing: border-box;
+}
+/* row 클래스는 cell, cell-right의 부모 */
+.row::after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+.block {
+	display: block;
+}
+
+.padding-left-0 {
+	padding-left: 0 !important;
+}
+/* 커스텀 */
+.con {
+	width: 1000px;
+}
+
+.btn {
+	padding: 10px;
+}
+</style>
+</head>
+<body>
+	<h1 class="title-box con">${pageName}</h1>
+
+	<div class="top-bar con">
+		<nav class="menu-box-1">
+			<ul class="row">
+				<li class="cell"><a class="btn block padding-left-0" href="/">홈</a></li>
+				<li class="cell"><a class="btn block" href="/chat/list">채팅방
+						리스트</a></li>
+				<li class="cell"><a class="btn block"
+					href="/article/list?boardId=1">공지사항 글 리스트</a></li>
+				<li class="cell"><a class="btn block"
+					href="/article/list?boardId=2">자유게시판 글 리스트</a></li>
+				<c:if test="${isLogined}">
+					<li class="cell"><a class="btn block" href="/chat/add">채팅방
+							만들기</a></li>
+					<li class="cell"><a class="btn block"
+						href="/article/write?boardId=1">공지사항 글 작성</a></li>
+					<li class="cell"><a class="btn block"
+						href="/article/write?boardId=2">자유게시판 글 작성</a></li>
+					<li class="cell"><a class="btn block" href="/member/doLogout">로그아웃</a></li>
+				</c:if>
+				<c:if test="${isLogined == false}">
+					<li class="cell"><a class="btn block" href="/member/login">로그인</a></li>
+					<li class="cell"><a class="btn block"
+						href="/member/findLoginId">아이디 찾기</a></li>
+					<li class="cell"><a class="btn block"
+						href="/member/findLoginPasswd">비밀번호 찾기</a></li>
+					<li class="cell"><a class="btn block" href="/member/join">회원가입</a></li>
+				</c:if>
+			</ul>
+		</nav>
+	</div>
